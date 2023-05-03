@@ -6,8 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
+    private Animator anim;
 
     private float movementInputDirection;
+    private bool isWalking;
 
    
     public float movementSpeed = 10f;
@@ -17,12 +19,14 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
         checkInput();
         CheckMovementDirection();
+        UpdateAnimation();
     }
 
     private void FixedUpdate() {
@@ -52,9 +56,23 @@ public class PlayerController : MonoBehaviour
             sprite.flipX = false;
         }
 
+        if (rb.velocity.x != 0)
+        {
+            isWalking = true;
+        }
+
+        else
+        {
+            isWalking = false;
+        }
+
     }
 
     private void Jump(){
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void UpdateAnimation(){
+        anim.SetBool("isWalking", isWalking);
     }
 }
