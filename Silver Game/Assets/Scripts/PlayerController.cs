@@ -5,16 +5,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private SpriteRenderer sprite;
 
     private float movementInputDirection;
-    private bool isFacingRight = true;
 
+   
     public float movementSpeed = 10f;
     public float jumpForce = 4f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -42,19 +44,14 @@ public class PlayerController : MonoBehaviour
     }
 
     private void CheckMovementDirection(){
-        if(isFacingRight && movementInputDirection < 0)
+        if(movementInputDirection < 0)
         {
-            Flip();
+            sprite.flipX = true;
         }
-        else if(!isFacingRight && movementInputDirection > 0){
-            Flip();
+        else if(movementInputDirection > 0){
+            sprite.flipX = false;
         }
 
-    }
-
-    private void Flip(){
-        isFacingRight = !isFacingRight;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     private void Jump(){
