@@ -11,15 +11,17 @@ public class PlayerController : MonoBehaviour
     private int amountOfJumpsLeft;
 
     private float movementInputDirection;
+    private bool isFacingRight = true;
     private bool isWalking;
     private bool isGrounded;
     private bool isTouchingWall;
+    private bool isWallSliding;
     private bool canJump;
 
     public int amountOfJumps = 1;
-   
     public float movementSpeed = 10f;
     public float jumpForce = 4f;
+    public float wallSlideSpeed;
     public float groundCheckRadius;
     public float wallCheckDistance;
 
@@ -42,6 +44,7 @@ public class PlayerController : MonoBehaviour
         CheckMovementDirection();
         UpdateAnimation();
         CheckIfCanJump();
+        CheckIfWallSliding();
     }
 
     private void FixedUpdate() {
@@ -52,6 +55,14 @@ public class PlayerController : MonoBehaviour
     private void applyMovement()
     {
         rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+
+        if(isWallSliding)
+        {
+            if(rb.velocity.y < wallSlideSpeed)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+            }
+        }
     }
 
     private void checkInput() 
@@ -73,14 +84,25 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void CheckIfWallSliding()
+    {
+        if(isTouchingWall && !isGrounded && rb.velocity.y < 0)
+        {
+            isWallSliding = true;
+        }
+        else{
+            isWallSliding = false;
+        }
+    }
+
 
     private void CheckMovementDirection(){
-        if(movementInputDirection < 0)
+        if(isFacingRight && movementInputDirection < 0)
         {
-            sprite.flipX = true;
+            Flip();
         }
-        else if(movementInputDirection > 0){
-            sprite.flipX = false;
+        else if(!isFacingRight && movementInputDirection > 0){
+            Flip();
         }
 
         if (rb.velocity.x != 0)
@@ -113,6 +135,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        transform.Rotate(0.0f, 180.0f, 0.0f);
+    }
+
     private void Jump()
     {
         if(canJump){
@@ -126,6 +154,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isWalking", isWalking);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetFloat("yVelocity", rb.velocity.y);
+        anim.SetBool("isWallSliding", isWallSliding);
     }
 
     private void OnDrawGizmos()

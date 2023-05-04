@@ -80220,6 +80220,7 @@ MonoBehaviour:
   amountOfJumps: 2
   movementSpeed: 10
   jumpForce: 16
+  wallSlideSpeed: 2
   groundCheckRadius: 0.3
   wallCheckDistance: 0.4
   whatIsGround:
