@@ -8,18 +8,29 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator anim;
 
+    private int amountOfJumpsLeft;
+
     private float movementInputDirection;
     private bool isWalking;
+    private bool isGrounded;
+    private bool canJump;
 
+    public int amountOfJumps = 1;
    
     public float movementSpeed = 10f;
     public float jumpForce = 4f;
+    public float groundCheckRadius;
+
+    public LayerMask whatIsGround;
+
+    public Transform groundCheck;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        amountOfJumpsLeft = amountOfJumps;
     }
 
     void Update()
@@ -27,10 +38,12 @@ public class PlayerController : MonoBehaviour
         checkInput();
         CheckMovementDirection();
         UpdateAnimation();
+        CheckIfCanJump();
     }
 
     private void FixedUpdate() {
         applyMovement();
+        CheckSuroundings();
     }
 
     private void checkInput() 
@@ -41,6 +54,7 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
     }
+
 
     private void applyMovement()
     {
@@ -68,11 +82,46 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void Jump(){
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    private void CheckIfCanJump()
+    {
+        //reinitialize amount of jump left if we are grounded
+        if (isGrounded && rb.velocity.y <= 0)
+        {
+            amountOfJumpsLeft = amountOfJumps;
+        }
+
+        if (amountOfJumpsLeft <= 0)
+        {
+            canJump = false;
+        }
+        else
+        {
+            canJump = true;
+        }
     }
 
-    private void UpdateAnimation(){
+    private void Jump()
+    {
+        if(canJump){
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            amountOfJumpsLeft--;
+        }
+    }
+
+    private void UpdateAnimation()
+    {
         anim.SetBool("isWalking", isWalking);
+        anim.SetBool("isGrounded", isGrounded);
+        anim.SetFloat("yVelocity", rb.velocity.y);
+    }
+
+    private void CheckSuroundings()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
