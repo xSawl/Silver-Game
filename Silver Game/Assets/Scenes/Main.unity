@@ -80217,7 +80217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc39f372a167454f9777a27ac5856d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amountOfJumps: 2
+  amountOfJumps: 1
   movementSpeed: 10
   jumpForce: 16
   variableJumpHeightMultiplier: 0.5
@@ -80226,6 +80226,10 @@ MonoBehaviour:
   wallCheckDistance: 0.4
   movementForceInAir: 50
   airDragMultiplier: 0.95
+  wallHopForce: 0
+  wallJumpForce: 0
+  wallHopDirection: {x: 0, y: 0}
+  wallJumpDirection: {x: 0, y: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
