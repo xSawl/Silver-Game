@@ -21,9 +21,12 @@ public class PlayerController : MonoBehaviour
     public int amountOfJumps = 1;
     public float movementSpeed = 10f;
     public float jumpForce = 4f;
+    public float  variableJumpHeightMultiplier = 0.5f;
     public float wallSlideSpeed;
     public float groundCheckRadius;
     public float wallCheckDistance;
+    public float movementForceInAir;
+    public float airDragMultiplier = 0.95f;
 
     public LayerMask whatIsGround;
 
@@ -54,7 +57,23 @@ public class PlayerController : MonoBehaviour
 
     private void applyMovement()
     {
-        rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+        if(isGrounded)
+        {
+            rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y); 
+        }
+        else if(!isGrounded && !isWallSliding && movementInputDirection != 0)
+        {
+            Vector2 forceToAdd = new Vector2(movementForceInAir * movementInputDirection, 0);
+            rb.AddForce(forceToAdd);
+
+            if(Mathf.Abs(rb.velocity.x) > movementSpeed){
+                rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+            }
+        }
+        else if(!isGrounded && !isWallSliding && movementInputDirection == 0 )
+        {
+            rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
+        }
 
         if(isWallSliding)
         {
@@ -71,6 +90,10 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Jump")){
             Jump();
+        }
+
+        if(Input.GetButtonUp("Jump")){
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
         }
     }
 
@@ -137,8 +160,12 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
-        isFacingRight = !isFacingRight;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
+        if(!isWallSliding)
+        {
+            isFacingRight = !isFacingRight;
+            transform.Rotate(0.0f, 180.0f, 0.0f);
+        }
+       
     }
 
     private void Jump()
