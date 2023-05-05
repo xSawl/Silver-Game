@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
     private float jumpTimer;
+    private float turnTimer;
+    private float wallJumpTimer;
+    private int lastWallJumpDirection;
 
     private float movementInputDirection;
     private bool isFacingRight = true;
@@ -21,6 +24,10 @@ public class PlayerController : MonoBehaviour
     private bool canNormalJump;
     private bool canWallJump;
     private bool isAttemptingToJump;
+    private bool checkJumpMiltiplier;
+    private bool canMove;
+    private bool canFlip;
+    private bool hasWallJumped;
 
     public int amountOfJumps = 1;
     public float movementSpeed = 10f;
@@ -34,6 +41,8 @@ public class PlayerController : MonoBehaviour
     public float wallHopForce;
     public float wallJumpForce;
     public float jumpTimerSet = 0.15f;
+    public float turnTimerSet = 0.1f;
+    public float wallJumpTimerSet = 0.5f;
 
     public Vector2 wallHopDirection;
     public Vector2 wallJumpDirection;
@@ -78,7 +87,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //on ground
-        else
+        else if(canMove)
         {
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y); 
         }
@@ -111,8 +120,32 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if(Input.GetButtonUp("Jump")){
+        if(Input.GetButtonDown("Horizontal") && isTouchingWall)
+        {
+            if(!isGrounded && movementInputDirection != facingDirection)
+            {
+                canMove = false;
+                canFlip = false;
+
+                turnTimer = turnTimerSet;
+            }
+        }
+
+        if(checkJumpMiltiplier && !Input.GetButton("Jump"))
+        {
+            checkJumpMiltiplier = false;
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
+        }
+
+        if(!canMove)
+        {
+            turnTimer -= Time.deltaTime;
+
+            if(turnTimer <= 0)
+            {
+                canMove = true;
+                canFlip = true;
+            }
         }
     }
 
@@ -128,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckIfWallSliding()
     {
-        if(isTouchingWall && movementInputDirection == facingDirection)
+        if(isTouchingWall && movementInputDirection == facingDirection && rb.velocity.y < 0)
         {
             isWallSliding = true;
         }
@@ -200,13 +233,30 @@ public class PlayerController : MonoBehaviour
             {
                 jumpTimer -= Time.deltaTime;
             }
+
+            if(wallJumpTimer > 0)
+            {
+                if(hasWallJumped && movementInputDirection == -lastWallJumpDirection)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, 0.0f);
+                    hasWallJumped = false;
+                }
+                else if(wallJumpTimer <= 0)
+                {
+                    hasWallJumped = false;
+                }
+                else
+                {
+                    wallJumpTimer -= Time.deltaTime;
+                }
+            }
         }
     }
 
 
     private void Flip()
     {
-        if(!isWallSliding)
+        if(!isWallSliding && canFlip)
         {
             facingDirection *= -1;
             isFacingRight = !isFacingRight;
@@ -223,6 +273,7 @@ public class PlayerController : MonoBehaviour
             amountOfJumpsLeft--;
             jumpTimer = 0;
             isAttemptingToJump = false;
+            checkJumpMiltiplier = true;
         }
     }
 
@@ -237,6 +288,13 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(forceToAdd, ForceMode2D.Impulse);
             jumpTimer = 0;
             isAttemptingToJump = false;
+            checkJumpMiltiplier = true;
+            turnTimer = 0;
+            canMove = true;
+            canFlip = true;
+            hasWallJumped = true;
+            wallJumpTimer = wallJumpTimerSet;
+            lastWallJumpDirection = -facingDirection;
         }
     }
 
