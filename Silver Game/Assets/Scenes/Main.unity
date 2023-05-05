@@ -80226,10 +80226,10 @@ MonoBehaviour:
   wallCheckDistance: 0.4
   movementForceInAir: 50
   airDragMultiplier: 0.95
-  wallHopForce: 0
-  wallJumpForce: 0
-  wallHopDirection: {x: 0, y: 0}
-  wallJumpDirection: {x: 0, y: 0}
+  wallHopForce: 10
+  wallJumpForce: 20
+  wallHopDirection: {x: 1, y: 0.5}
+  wallJumpDirection: {x: 1, y: 2}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
