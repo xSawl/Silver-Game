@@ -209,7 +209,7 @@ public class PlayerController : MonoBehaviour
             {
                 canMove = false;
                 canFlip = false;
-                rb.velocity = new Vector2(dashSpeed * facingDirection, rb.velocity.y);
+                rb.velocity = new Vector2(dashSpeed * facingDirection, 0);
                 dashTimeLeft -= Time.deltaTime;
 
                 if (Mathf.Abs(transform.position.x - lastImageExpos) > distanceBetweenImages)
@@ -383,6 +383,15 @@ public class PlayerController : MonoBehaviour
         }
        
     }
+
+    public void DisableFlip(){
+        canFlip = false;
+    }
+
+    public void EnableFlip(){
+        canFlip = true;
+    }
+
 
     private void NormalJump()
     {
