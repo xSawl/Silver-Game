@@ -392,6 +392,10 @@ public class PlayerController : MonoBehaviour
         canFlip = true;
     }
 
+    public int GetFacingDirection(){
+        return facingDirection;
+    }
+
 
     private void NormalJump()
     {
