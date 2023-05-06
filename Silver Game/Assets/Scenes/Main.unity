@@ -80910,8 +80910,8 @@ MonoBehaviour:
     m_Bits: 8
   knockbackSpeed: {x: 10, y: 5}
   hitParticle: {fileID: 120744112225456634, guid: 237814cd10a36a644a6d7db19e5456be, type: 3}
-  deathChunkParticle: {fileID: 0}
-  deathBloodParticle: {fileID: 0}
+  deathChunkParticle: {fileID: 2124539047633232589, guid: 9d94f6e0a02b8f1438c8bd9dfa5d2466, type: 3}
+  deathBloodParticle: {fileID: 8983005193246481015, guid: eed32592e4e5d15479086caa978a1193, type: 3}
 --- !u!1 &1284939685
 GameObject:
   m_ObjectHideFlags: 0
