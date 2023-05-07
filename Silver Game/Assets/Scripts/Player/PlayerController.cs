@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     private float dashTimeLeft;
     private float lastImageExpos;
     private float lastDash = -100;
+    private float knockbackStartTime;
+
+    [SerializeField]
+    private float KnockbackDuration;
 
     private float movementInputDirection;
     private bool isFacingRight = true;
@@ -35,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private bool canClimbLedge = false;
     private bool ledgeDetected;
     private bool isDashing;
+    private bool knockback;
 
     public int amountOfJumps = 1;
     public float movementSpeed = 10f;
@@ -59,7 +64,9 @@ public class PlayerController : MonoBehaviour
     public float ledgeClimbYOffSet1 = 0f;
     public float ledgeClimbXOffSet2 = 0f;
     public float ledgeClimbYOffSet2 = 0f;
-
+    
+    [SerializeField]
+    private Vector2 knockbackSpeed;
 
     public Vector2 wallHopDirection;
     public Vector2 wallJumpDirection;
@@ -73,6 +80,9 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public Transform wallCheck;
     public Transform ledgeCheck;
+
+    
+#region Main Functions
 
     void Start()
     {
@@ -93,7 +103,8 @@ public class PlayerController : MonoBehaviour
         CheckIfWallSliding();
         CheckJump();
         CheckWallClimb();
-        //CheckDash();
+        CheckDash();
+        CheckKnockback();
     }
 
     private void FixedUpdate() {
@@ -104,15 +115,14 @@ public class PlayerController : MonoBehaviour
 
     private void applyMovement()
     {
-
-        //don't move in Air
-        if (!isGrounded && !isWallSliding && movementInputDirection == 0)
+        //if he's not moving in the Air with no knockback
+        if (!isGrounded && !isWallSliding && movementInputDirection == 0 && !knockback)
         {
             rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
         }
 
         //on ground
-        else if(canMove)
+        else if(canMove && !knockback)
         {
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y); 
         }
@@ -127,6 +137,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+#endregion
+
+#region Check Functions
     private void checkInput() 
     {
         movementInputDirection = Input.GetAxisRaw("Horizontal");
@@ -270,26 +283,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void AttemptToDash() 
-    {
-        isDashing = true;
-        dashTimeLeft = dashTime;
-        lastDash = Time.time;
-        
-        PlayerAfterImagePool.Instance.GetFromPool();
-        lastImageExpos = transform.position.x;
-    }
-    
-    public void FinishLedgeClimb()
-    {
-        canClimbLedge = false;
-        transform.position = ledgePos2;
-        canMove = true;
-        canFlip = true;
-        ledgeDetected = false;
-        anim.SetBool("canClimbLedge", canClimbLedge);
-    }
-
     private void CheckMovementDirection(){
         if(isFacingRight && movementInputDirection < 0)
         {
@@ -310,8 +303,8 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
-    private void CheckIfCanJump()
+    
+private void CheckIfCanJump()
     {
         //reinitialize amount of jump left if we are grounded
         if (isGrounded && rb.velocity.y <= 0.01f)
@@ -372,10 +365,57 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+#endregion
+
+  public bool getDashStatus()
+    {
+        return isDashing;
+    }
+
+#region Knockback Functions
+
+    private void CheckKnockback()
+    {
+        if(Time.time >= knockbackStartTime + KnockbackDuration && knockback) 
+        {
+            knockback = false;
+            rb.velocity = new Vector2(0.0f, rb.velocity.y);
+        }
+    }
+
+    public void Knockback(int directiion)
+    {
+        knockback = true;
+        knockbackStartTime = Time.time;
+        rb.velocity = new Vector2(knockbackSpeed.x * directiion, knockbackSpeed.y);
+
+    }
+
+#endregion
+
+    private void AttemptToDash() 
+    {
+        isDashing = true;
+        dashTimeLeft = dashTime;
+        lastDash = Time.time;
+        
+        PlayerAfterImagePool.Instance.GetFromPool();
+        lastImageExpos = transform.position.x;
+    }
+    
+    public void FinishLedgeClimb()
+    {
+        canClimbLedge = false;
+        transform.position = ledgePos2;
+        canMove = true;
+        canFlip = true;
+        ledgeDetected = false;
+        anim.SetBool("canClimbLedge", canClimbLedge);
+    }
 
     private void Flip()
     {
-        if(!isWallSliding && canFlip)
+        if(!isWallSliding && canFlip && !knockback)
         {
             facingDirection *= -1;
             isFacingRight = !isFacingRight;
@@ -429,20 +469,6 @@ public class PlayerController : MonoBehaviour
             lastWallJumpDirection = -facingDirection;
         }
     }
-
-    /*
-    private void HopJump()
-    {
-        if (isWallSliding && movementInputDirection == 0 && canJump) //for Wall Hop
-        {
-            isWallSliding = false;
-            amountOfJumpsLeft--;
-            Vector2 forceToAdd = new Vector2(wallHopForce * wallHopDirection.x * -facingDirection, wallHopForce * wallHopDirection.y);
-            rb.AddForce(forceToAdd, ForceMode2D.Impulse);
-
-        }
-    }
-    */
 
     private void UpdateAnimation()
     {

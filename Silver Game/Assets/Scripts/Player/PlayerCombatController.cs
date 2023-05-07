@@ -21,10 +21,13 @@ public class PlayerCombatController : MonoBehaviour
 
     private Animator anim;
 
+    private PlayerController PC;
+
     private void Start() 
     {
         anim = GetComponent<Animator>();
         anim.SetBool("canAttack", combatEnable);
+        PC = GetComponent<PlayerController>();
     }
 
     private void Update() 
@@ -33,12 +36,12 @@ public class PlayerCombatController : MonoBehaviour
         CheckAttacks();
     }
 
+
     private void CheckCombatInput()
     {
         if(Input.GetMouseButtonDown(0))
         {
             if(combatEnable){
-                //attempat combat
                 gotInput = true;
                 lastInputTime = Time.time;
             }
@@ -51,6 +54,7 @@ public class PlayerCombatController : MonoBehaviour
             //perform Attack1
             if(!isAttacking)
             {
+                Debug.Log("is not atacking = true");
                 gotInput = false;
                 isAttacking = true;
                 isFirstAttack = !isFirstAttack;
@@ -68,7 +72,8 @@ public class PlayerCombatController : MonoBehaviour
         }
     }
 
-    private void CheckAttackHitBox(){
+    private void CheckAttackHitBox()
+    {
         Collider2D[] detectedObjects =    
         Physics2D.OverlapCircleAll(attackHitBoxPos.position, attack1Radius, 
         whatISDamageable);
@@ -89,6 +94,30 @@ public class PlayerCombatController : MonoBehaviour
         isAttacking = false;
         anim.SetBool("isAttacking", isAttacking);
         anim.SetBool("attack1", false);
+        
+    }
+
+    private void Damage(float[] attackDetails)
+    {
+
+        if(!PC.getDashStatus()) 
+        {
+            int directiion;
+
+            //Damage player heere using attackDetails[0]
+
+            if(attackDetails[1] < transform.position.x)
+            {
+                directiion = 1;
+            }
+
+            else
+            {
+                directiion = -1;
+            }
+
+            PC.Knockback(directiion);
+        }
         
     }
 
