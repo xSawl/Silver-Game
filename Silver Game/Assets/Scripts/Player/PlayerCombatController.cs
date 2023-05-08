@@ -22,12 +22,14 @@ public class PlayerCombatController : MonoBehaviour
     private Animator anim;
 
     private PlayerController PC;
+    private PlayerStats PS;
 
     private void Start() 
     {
         anim = GetComponent<Animator>();
         anim.SetBool("canAttack", combatEnable);
         PC = GetComponent<PlayerController>();
+        PS = GetComponent<PlayerStats>();   
     }
 
     private void Update() 
@@ -54,7 +56,6 @@ public class PlayerCombatController : MonoBehaviour
             //perform Attack1
             if(!isAttacking)
             {
-                Debug.Log("is not atacking = true");
                 gotInput = false;
                 isAttacking = true;
                 isFirstAttack = !isFirstAttack;
@@ -104,7 +105,7 @@ public class PlayerCombatController : MonoBehaviour
         {
             int directiion;
 
-            //Damage player heere using attackDetails[0]
+            PS.DecreaseHealth(attackDetails[0]);
 
             if(attackDetails[1] < transform.position.x)
             {
