@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class D_PlayerDetectted : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+[CreateAssetMenu(fileName = "newPlayerDetectedStateData", menuName = "Data/State Data/Player Detected State")]
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+public class D_PlayerDetectted : ScriptableObject
+{
+    
 }

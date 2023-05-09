@@ -2,17 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class E1_PlayerDetectedState : MonoBehaviour
+public class E1_PlayerDetectedState : PlayerDetectedState
 {
-    // Start is called before the first frame update
-    void Start()
+    private Enemy1 enemy;
+
+    public E1_PlayerDetectedState(Entity entity, FinalStateMachine stateMachine, string animBoolName, D_PlayerDetectted stateData, Enemy1 enemy) : base(entity, stateMachine, animBoolName, stateData)
     {
-        
+        this.enemy = enemy;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Enter()
     {
-        
+        base.Enter();
     }
+
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        if (!isPlayerInMaxAgroRange)
+        {
+            enemy.idleState.SetFlipAfterIdle(false);
+            stateMachine.ChangeState(enemy.idleState);
+        }
+    }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+    }
+
 }

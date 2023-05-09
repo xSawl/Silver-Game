@@ -9,6 +9,7 @@ public class MoveState : State
 
     protected bool isDetectingWall;
     protected bool isDetectingledge;
+    protected bool isPlayerInMinAgroRange;
 
     public MoveState(Entity entity, FinalStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(entity, stateMachine, animBoolName)
     {
@@ -22,6 +23,10 @@ public class MoveState : State
     {
         base.Enter();
         entity.SetVelocity(stateData.movementSpeed);
+
+        isDetectingledge = entity.CheckLedge();
+        isDetectingWall = entity.CheckWall();
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
     }
 
 
@@ -37,6 +42,7 @@ public class MoveState : State
 
         isDetectingledge = entity.CheckLedge();
         isDetectingWall = entity.CheckWall();
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
     }
 
 }

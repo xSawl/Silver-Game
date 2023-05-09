@@ -25,16 +25,22 @@ public class E1_MoveState : MoveState
     {
         base.LogicUpdate();
 
+        if(isPlayerInMinAgroRange)
+        {
+            stateMachine.ChangeState(enemy.playerDetectedState);
+        }
+
+        else if (isDetectingWall || !isDetectingledge)
+        {
+            enemy.idleState.SetFlipAfterIdle(true);
+            stateMachine.ChangeState(enemy.idleState);
+        }
+
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
 
-        if(isDetectingWall || !isDetectingledge) 
-        {
-            enemy.idleState.SetFlipAfterIdle(true);
-            stateMachine.ChangeState(enemy.idleState);
-        }
     }
 }

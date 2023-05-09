@@ -6,6 +6,9 @@ public class PlayerDetectedState : State
 {
     protected D_PlayerDetectted stateData;
 
+    protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
+
     public PlayerDetectedState(Entity entity, FinalStateMachine stateMachine, string animBoolName, D_PlayerDetectted stateData) : base(entity, stateMachine, animBoolName)
     {
         this.stateData = stateData;
@@ -14,11 +17,11 @@ public class PlayerDetectedState : State
     public override void Enter()
     {
         base.Enter();
-    }
 
-    public override bool Equals(object obj)
-    {
-        return base.Equals(obj);
+        entity.SetVelocity(0f);
+
+        isPlayerInMinAgroRange = entity.CheckPlayerInMaxAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
     }
 
     public override void Exit()
@@ -26,10 +29,6 @@ public class PlayerDetectedState : State
         base.Exit();
     }
 
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
 
     public override void LogicUpdate()
     {
@@ -39,10 +38,8 @@ public class PlayerDetectedState : State
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        isPlayerInMinAgroRange = entity.CheckPlayerInMaxAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange(); 
     }
-
-    public override string ToString()
-    {
-        return base.ToString();
-    }
+    
 }
