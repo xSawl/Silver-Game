@@ -80508,6 +80508,7 @@ GameObject:
   - component: {fileID: 900013006}
   - component: {fileID: 900013005}
   - component: {fileID: 900013004}
+  - component: {fileID: 900013008}
   m_Layer: 6
   m_Name: Alive
   m_TagString: Enemy
@@ -80531,6 +80532,7 @@ Transform:
   - {fileID: 205576142}
   - {fileID: 1337935340}
   - {fileID: 251929724}
+  - {fileID: 1938836218}
   m_Father: {fileID: 1250141048}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -80654,6 +80656,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &900013008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900013002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89ca43a38af6184194ed7223e08ea38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1250141047
 GameObject:
   m_ObjectHideFlags: 0
@@ -80708,6 +80722,8 @@ MonoBehaviour:
   playerDetecttedData: {fileID: 11400000, guid: 7b742c4457f64415c9761fa4ff3ea0c4, type: 2}
   chargeStateData: {fileID: 11400000, guid: 1fa162b0de48e41e98f80243e4d832b4, type: 2}
   lookForPlayerStateData: {fileID: 11400000, guid: 9f0bdbeb61dda49c4925832d52ee9b7d, type: 2}
+  meleeAttackStateData: {fileID: 11400000, guid: 57057e004fc62754394c97a2a07b8148, type: 2}
+  meleeAttackPosition: {fileID: 1938836218}
 --- !u!1 &1284939685
 GameObject:
   m_ObjectHideFlags: 0
@@ -88906,6 +88922,37 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
+--- !u!1 &1938836217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1938836218}
+  m_Layer: 6
+  m_Name: MeleeAttackPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1938836218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938836217}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.029, y: -0.253, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 900013003}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2101070790
 GameObject:
   m_ObjectHideFlags: 0
