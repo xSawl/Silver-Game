@@ -37,10 +37,17 @@ public class E1_PlayerDetectedState : PlayerDetectedState
             stateMachine.ChangeState(enemy.chargeState);
         }
 
+        else if(!isDetectingLedge)
+        {
+            enemy.Flip();
+            stateMachine.ChangeState(enemy.moveState);
+        } 
+
         else if (!isPlayerInMaxAgroRange)
         {
             stateMachine.ChangeState(enemy.lookForPlayerState);
-        } 
+        }
+
     }
 
     public override void PhysicsUpdate()

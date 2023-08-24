@@ -22,9 +22,9 @@ public class PlayerStats : MonoBehaviour
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void DecreaseHealth(float amoutn)
+    public void DecreaseHealth(float amount)
     {
-        currentHealth -= amoutn;
+        currentHealth -= amount;
 
         if(currentHealth <= 0)
         {
