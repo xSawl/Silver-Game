@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class E2_PlayerDetectedState : PlayerDetectedState
+public class E2_LookForPlayerState : LookForPlayerState
 {
     private Enemy2 enemy;
 
-    public E2_PlayerDetectedState(Entity entity, FinalStateMachine stateMachine, string animBoolName, D_PlayerDetectedState stateData, Enemy2 enemy) : base(entity, stateMachine, animBoolName, stateData)
+    public E2_LookForPlayerState(Entity entity, FinalStateMachine stateMachine, string animBoolName, D_LookForPlayerState stateData, Enemy2 enemy) : base(entity, stateMachine, animBoolName, stateData)
     {
         this.enemy = enemy;
     }
@@ -25,13 +25,14 @@ public class E2_PlayerDetectedState : PlayerDetectedState
     {
         base.LogicUpdate();
 
-        if(performCloseRangeAction)
+         if(isPlayerInMinAgroRange) 
         {
-            stateMachine.ChangeState(enemy.meleeAttackState);
+            stateMachine.ChangeState(enemy.playerDetectedState);
         }
-        else if (!isPlayerInMaxAgroRange)
+
+        else if(isAllTurnsTimeDone) 
         {
-            stateMachine.ChangeState(enemy.lookForPlayerState);
+            stateMachine.ChangeState(enemy.moveState);
         }
 
     }

@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82cd0708cb1bdc443ab4058fed25d7d7, type: 3}
-  m_Name: E2_MoveState
+  m_Name: E2_MoveStateData
   m_EditorClassIdentifier: 
   movementSpeed: 3

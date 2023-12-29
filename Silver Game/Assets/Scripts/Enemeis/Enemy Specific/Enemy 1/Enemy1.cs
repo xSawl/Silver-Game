@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 
 public class Enemy1 : Entity
@@ -12,7 +13,6 @@ public class Enemy1 : Entity
     public E1_MeleeAttackState meleeAttackState { get; private set; }
     public E1_StunState stunState { get; private set; }
     public E1_DeadState deadState { get; private set; }
-
 
 
 
@@ -55,7 +55,6 @@ public class Enemy1 : Entity
         meleeAttackState = new E1_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition,meleeAttackStateData, this);
         stunState = new E1_StunState(this, stateMachine, "stun",stunStateData, this);
         deadState = new E1_DeadState(this, stateMachine, "dead", deadStateData, this);
-        
 
         stateMachine.Initialize(moveState);
     }
@@ -79,6 +78,12 @@ public class Enemy1 : Entity
         else if(isStunned && stateMachine.currentState != stunState) 
         {
             stateMachine.ChangeState(stunState);
+        }
+
+        else if(!CheckPlayerInMinAgroRange())
+        {
+                lookForPlayerState.SetTurnImmediately(true);
+                stateMachine.ChangeState(lookForPlayerState); 
         }
 
     }
